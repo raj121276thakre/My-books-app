@@ -1,0 +1,88 @@
+package com.rajapps.mybooksapp.ebooksSE;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.rajapps.mybooksapp.R;
+import com.rajapps.mybooksapp.ebook.EbookData;
+
+import java.util.List;
+
+public class EbookAdapterSE extends RecyclerView.Adapter<EbookAdapterSE.EbookViewHolder> {
+
+    private Context context;
+    private List<EbookData> list;
+
+    public EbookAdapterSE(Context context, List<EbookData> list) {
+        this.context = context;
+        this.list = list;
+    }
+
+    @NonNull
+    @Override
+    public EbookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.ebbok_item_layout,parent,false);
+
+        return new EbookViewHolder(view);
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull EbookViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        holder.ebookName.setText(list.get(position).getName());
+
+        // to open pdfviewer activity
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////                Intent intent = new Intent(context,PdfViewerActivity.class);
+////                intent.putExtra("pdfUrl",list.get(position).getPdfUrl());
+////                context.startActivity(intent);
+//            }
+//        });
+
+        // function for Download pdf
+        holder.ebookDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(list.get(position).getPdfUrl()));
+                context.startActivity(intent);
+
+
+
+             //  Toast.makeText(context, "Downloaded", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    public class EbookViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView ebookName;
+
+        private ImageView ebookDownload;
+        public EbookViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            ebookName = itemView.findViewById((R.id.ebookNameSE));
+            ebookDownload = itemView.findViewById((R.id.ebookDownloadSE));
+        }
+    }
+}
